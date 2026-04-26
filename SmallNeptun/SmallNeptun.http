@@ -1,0 +1,6 @@
+@SmallNeptun_HostAddress = http://localhost:5005
+
+GET {{SmallNeptun_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
