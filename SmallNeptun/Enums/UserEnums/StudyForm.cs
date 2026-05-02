@@ -3,8 +3,8 @@
     public enum StudyForm
     {
         None, //nincs
-        full_time, //napppalis
-        part_time //levelezős
+        FullTime, //napppalis
+        PartTime //levelezős
 
     }
 
