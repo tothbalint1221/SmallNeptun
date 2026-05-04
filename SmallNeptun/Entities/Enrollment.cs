@@ -8,8 +8,10 @@
 
         public int CourseId { get; set; }
         public Course Course { get; set; }
-        public int? Grade { get; set; }
-        //public bool Signature { get; set; }
+
+        //public int GradeId { get; set; }
+        //public Grade? Grade { get; set; }
+        ////public bool Signature { get; set; }
 
     }
 }
