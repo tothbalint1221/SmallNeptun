@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SmallNeptun.Database;
 using SmallNeptun.Repository;
 using SmallNeptun.Services.Courses;
+using SmallNeptun.Services.Enrollments;
 using SmallNeptun.Services.Subjects;
 using SmallNeptun.Services.Users;
 
@@ -29,6 +30,7 @@ namespace SmallNeptun
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ISubjectService, SubjectService>();
             builder.Services.AddScoped<ICourseService, CourseService>();
+            builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
             builder.Services.AddAutoMapper(typeof(Program));
 
             var app = builder.Build();

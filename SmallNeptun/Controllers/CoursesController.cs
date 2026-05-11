@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using SmallNeptun.Dtos.Courses;
+using SmallNeptun.Dtos.Enrollments;
 using SmallNeptun.Services.Courses;
+using SmallNeptun.Services.Enrollments;
 
 namespace SmallNeptun.Controllers
 {
@@ -9,10 +11,12 @@ namespace SmallNeptun.Controllers
     public class CoursesController : ControllerBase
     {
         private readonly ICourseService _courseService;
+        private readonly IEnrollmentService _enrollmentService;
 
-        public CoursesController(ICourseService courseService)
+        public CoursesController(ICourseService courseService, IEnrollmentService enrollmentService)
         {
             _courseService = courseService;
+            _enrollmentService = enrollmentService;
         }
 
         [HttpPost]
@@ -90,6 +94,42 @@ namespace SmallNeptun.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpPost("change")]
+        public async Task<IActionResult> ChangeCourse(ChangeCourseDto dto)
+        {
+            var result = await _enrollmentService.ChangeCourseAsync(dto);
+
+            if (result.statusCode == 1)
+            {
+                return NotFound(result.errorMessage);
+            }
+
+            if (result.statusCode == 2)
+            {
+                return Conflict(result.errorMessage);
+            }
+
+            if (result.statusCode == 3)
+            {
+                return BadRequest(result.errorMessage);
+            }
+
+            return NoContent();
+        }
+
+        [HttpGet("{courseId}/students")]
+        public async Task<IActionResult> GetCourseStudents(int courseId)
+        {
+            var result = await _enrollmentService.GetCourseStudentsAsync(courseId);
+
+            if (result.statusCode == 1)
+            {
+                return NotFound(result.errorMessage);
+            }
+
+            return Ok(result.students);
         }
     }
 }
