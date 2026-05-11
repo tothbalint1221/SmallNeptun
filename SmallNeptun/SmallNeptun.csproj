@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.10" />
@@ -14,15 +15,24 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Dtos\" />
     <Folder Include="BackgroundServices\" />
+    <Folder Include="Dtos\Courses\" />
+    <Folder Include="Dtos\Enrollments\" />
+    <Folder Include="Dtos\Notifications\" />
+    <Folder Include="Dtos\Schedules\" />
+    <Folder Include="Dtos\Subjects\" />
     <Folder Include="Seed\" />
     <Folder Include="Profiles\" />
-    <Folder Include="Services\" />
+    <Folder Include="Services\Courses\" />
+    <Folder Include="Services\Enrollments\" />
+    <Folder Include="Services\Notifications\" />
+    <Folder Include="Services\Schedules\" />
+    <Folder Include="Services\Subjects\" />
   </ItemGroup>
 
 </Project>
