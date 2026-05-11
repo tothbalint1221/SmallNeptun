@@ -97,6 +97,11 @@ namespace SmallNeptun.Controllers
                 return NotFound(result.errorMessage);
             }
 
+            if (result.statusCode == 2)
+            {
+                return Conflict(result.errorMessage);
+            }
+
             return NoContent();
         }
 

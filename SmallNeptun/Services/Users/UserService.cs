@@ -58,7 +58,7 @@ namespace SmallNeptun.Services.Users
         public async Task<IEnumerable<UserViewDto>> GetStudentsAsync()
         {
             var users = await _unitOfWork.Users.Query()
-                .Where(u => u.UserType == UserType.Student)
+                .Where(u => u.UserType == UserType.Student && u.IsActive)
                 .ToListAsync();
 
             return _mapper.Map<IEnumerable<UserViewDto>>(users);
@@ -67,7 +67,7 @@ namespace SmallNeptun.Services.Users
         public async Task<IEnumerable<UserViewDto>> GetTeachersAsync()
         {
             var users = await _unitOfWork.Users.Query()
-                .Where(u => u.UserType == UserType.Teacher)
+                .Where(u => u.UserType == UserType.Teacher && u.IsActive)
                 .ToListAsync();
 
             return _mapper.Map<IEnumerable<UserViewDto>>(users);
@@ -76,7 +76,7 @@ namespace SmallNeptun.Services.Users
         public async Task<IEnumerable<UserViewDto>> GetAgentsAsync()
         {
             var users = await _unitOfWork.Users.Query()
-                .Where(u => u.UserType == UserType.Agent)
+                .Where(u => u.UserType == UserType.Agent && u.IsActive)
                 .ToListAsync();
 
             return _mapper.Map<IEnumerable<UserViewDto>>(users);
@@ -88,6 +88,11 @@ namespace SmallNeptun.Services.Users
             if (user is null)
             {
                 return (1, $"User with id {userId} was not found.", null);
+            }
+
+            if (!user.IsActive)
+            {
+                return (2, "This user is inactive.", null);
             }
 
             if (await _unitOfWork.Users.Query().AnyAsync(u => u.Email == dto.Email && u.Id != userId))
@@ -121,6 +126,11 @@ namespace SmallNeptun.Services.Users
             if (user is null)
             {
                 return (1, $"User with id {userId} was not found.");
+            }
+
+            if (!user.IsActive)
+            {
+                return (2, "This user is inactive.");
             }
 
             user.Password = dto.NewPassword;

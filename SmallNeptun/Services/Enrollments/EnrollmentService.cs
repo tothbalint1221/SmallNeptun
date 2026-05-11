@@ -39,6 +39,11 @@ namespace SmallNeptun.Services.Enrollments
                 return (1, $"Subject with id {subjectId} was not found.");
             }
 
+            if (!subject.IsActive)
+            {
+                return (2, "This subject is inactive.");
+            }
+
             if (dto.CourseIds.Count == 0)
             {
                 return (3, "At least one course must be selected.");
@@ -85,6 +90,22 @@ namespace SmallNeptun.Services.Enrollments
             if (student is null)
             {
                 return (1, $"Student with id {dto.StudentId} was not found.");
+            }
+
+            if (student.UserType != UserType.Student || !student.IsActive)
+            {
+                return (3, "User must be an active student.");
+            }
+
+            var subject = await _unitOfWork.Subjects.GetByIdAsync(subjectId);
+            if (subject is null)
+            {
+                return (1, $"Subject with id {subjectId} was not found.");
+            }
+
+            if (!subject.IsActive)
+            {
+                return (2, "This subject is inactive.");
             }
 
             var enrollments = await _unitOfWork.Enrollments.Query()
@@ -147,6 +168,22 @@ namespace SmallNeptun.Services.Enrollments
             if (student is null)
             {
                 return (1, $"Student with id {dto.StudentId} was not found.");
+            }
+
+            if (student.UserType != UserType.Student || !student.IsActive)
+            {
+                return (3, "User must be an active student.");
+            }
+
+            var subject = await _unitOfWork.Subjects.GetByIdAsync(fromEnrollment.Course.SubjectId);
+            if (subject is null)
+            {
+                return (1, $"Subject with id {fromEnrollment.Course.SubjectId} was not found.");
+            }
+
+            if (!subject.IsActive)
+            {
+                return (2, "This subject is inactive.");
             }
 
             if (!CourseFormMatchesStudent(toCourse.CourseForm, student.StudyForm))

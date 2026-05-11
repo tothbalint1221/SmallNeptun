@@ -70,6 +70,11 @@ namespace SmallNeptun.Services.Subjects
                 return (1, $"Subject with id {subjectId} was not found.", null);
             }
 
+            if (!subject.IsActive)
+            {
+                return (2, "This subject is inactive.", null);
+            }
+
             if (await _unitOfWork.Subjects.Query().AnyAsync(s => s.Code == dto.Code && s.Id != subjectId))
             {
                 return (2, "Subject code is already used.", null);

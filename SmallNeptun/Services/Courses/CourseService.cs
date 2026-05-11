@@ -113,10 +113,17 @@ namespace SmallNeptun.Services.Courses
 
         public async Task<(int statusCode, string errorMessage, CourseViewDto? course)> UpdateAsync(int courseId, UpdateCourseDto dto)
         {
-            var course = await _unitOfWork.Courses.GetByIdAsync(courseId);
+            var course = await _unitOfWork.Courses.Query()
+                .Include(c => c.Subject)
+                .FirstOrDefaultAsync(c => c.Id == courseId);
             if (course is null)
             {
                 return (1, $"Course with id {courseId} was not found.", null);
+            }
+
+            if (!course.Subject.IsActive)
+            {
+                return (2, "This subject is inactive.", null);
             }
 
             if (await _unitOfWork.Courses.Query().AnyAsync(c => c.CourseCode == dto.CourseCode && c.Id != courseId))
@@ -156,10 +163,17 @@ namespace SmallNeptun.Services.Courses
 
         public async Task<(int statusCode, string errorMessage)> DeleteAsync(int courseId)
         {
-            var course = await _unitOfWork.Courses.GetByIdAsync(courseId);
+            var course = await _unitOfWork.Courses.Query()
+                .Include(c => c.Subject)
+                .FirstOrDefaultAsync(c => c.Id == courseId);
             if (course is null)
             {
                 return (1, $"Course with id {courseId} was not found.");
+            }
+
+            if (!course.Subject.IsActive)
+            {
+                return (2, "This subject is inactive.");
             }
 
             if (await _unitOfWork.Enrollments.Query().AnyAsync(e => e.CourseId == courseId))
