@@ -1,11 +1,16 @@
 
 using Microsoft.EntityFrameworkCore;
+using SmallNeptun.BackgroundServices;
 using SmallNeptun.Database;
 using SmallNeptun.Repository;
 using SmallNeptun.Services.Courses;
 using SmallNeptun.Services.Enrollments;
+using SmallNeptun.Services.Notifications;
+using SmallNeptun.Services.Schedules;
 using SmallNeptun.Services.Subjects;
 using SmallNeptun.Services.Users;
+using SmallNeptun.Seed;
+using System.Reflection;
 
 namespace SmallNeptun
 {
@@ -19,7 +24,12 @@ namespace SmallNeptun
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                options.IncludeXmlComments(xmlPath);
+            });
 
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration
@@ -31,9 +41,14 @@ namespace SmallNeptun
             builder.Services.AddScoped<ISubjectService, SubjectService>();
             builder.Services.AddScoped<ICourseService, CourseService>();
             builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
+            builder.Services.AddScoped<IScheduleService, ScheduleService>();
+            builder.Services.AddScoped<INotificationService, NotificationService>();
+            builder.Services.AddHostedService<NotificationBackgroundService>();
             builder.Services.AddAutoMapper(typeof(Program));
 
             var app = builder.Build();
+
+            DataSeeder.SeedAsync(app.Services).GetAwaiter().GetResult();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
