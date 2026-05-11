@@ -26,6 +26,28 @@ namespace SmallNeptun.Controllers
             _scheduleService = scheduleService;
         }
 
+        /// <summary>
+        /// Uj kurzus hirdetese.
+        /// </summary>
+        /// <remarks>
+        /// Enum ertekeket pontosan igy kell megadni:
+        /// CourseType: Lecture, Practice, Lab
+        /// CourseForm: FullTime, PartTime, Both
+        /// HourType: Weekly, Semester
+        ///
+        /// Pelda:
+        /// {
+        ///   "courseCode": "PTI001-E",
+        ///   "subjectCode": "PTI001",
+        ///   "semesterId": 1,
+        ///   "maxStudents": 80,
+        ///   "courseType": "Lecture",
+        ///   "courseForm": "Both",
+        ///   "hourType": "Weekly",
+        ///   "hourCount": 2,
+        ///   "teacherIds": [3, 4]
+        /// }
+        /// </remarks>
         [HttpPost]
         public async Task<IActionResult> Create(CreateCourseDto dto)
         {
@@ -62,6 +84,26 @@ namespace SmallNeptun.Controllers
             return Ok(result.course);
         }
 
+        /// <summary>
+        /// Kurzus adatainak modositasa.
+        /// </summary>
+        /// <remarks>
+        /// Enum ertekeket pontosan igy kell megadni:
+        /// CourseType: Lecture, Practice, Lab
+        /// CourseForm: FullTime, PartTime, Both
+        /// HourType: Weekly, Semester
+        ///
+        /// Pelda:
+        /// {
+        ///   "courseCode": "PTI001-GY1",
+        ///   "semesterId": 1,
+        ///   "maxStudents": 30,
+        ///   "courseType": "Practice",
+        ///   "courseForm": "FullTime",
+        ///   "hourType": "Weekly",
+        ///   "hourCount": 2
+        /// }
+        /// </remarks>
         [HttpPut("{courseId}")]
         public async Task<IActionResult> Update(int courseId, UpdateCourseDto dto)
         {
@@ -143,6 +185,8 @@ namespace SmallNeptun.Controllers
         /// Orarendi idopontok megadasa.
         /// </summary>
         /// <remarks>
+        /// DayOfWeek ertekek: Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday.
+        ///
         /// Pelda heti orara:
         /// {
         ///   "schedules": [
@@ -197,6 +241,7 @@ namespace SmallNeptun.Controllers
         /// </summary>
         /// <remarks>
         /// A modositas lecsereli a kurzus teljes orarendjet az itt megadott listara.
+        /// DayOfWeek ertekek: Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday.
         ///
         /// Pelda:
         /// {

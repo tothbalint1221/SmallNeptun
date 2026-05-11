@@ -1,6 +1,16 @@
 @SmallNeptun_HostAddress = http://localhost:5005
 
-GET {{SmallNeptun_HostAddress}}/weatherforecast/
+GET {{SmallNeptun_HostAddress}}/api/subjects
+Accept: application/json
+
+###
+
+GET {{SmallNeptun_HostAddress}}/api/users/students
+Accept: application/json
+
+###
+
+GET {{SmallNeptun_HostAddress}}/api/notifications
 Accept: application/json
 
 ###

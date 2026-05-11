@@ -11,6 +11,7 @@ using SmallNeptun.Services.Subjects;
 using SmallNeptun.Services.Users;
 using SmallNeptun.Seed;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace SmallNeptun
 {
@@ -22,7 +23,12 @@ namespace SmallNeptun
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
             {

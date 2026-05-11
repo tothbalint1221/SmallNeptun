@@ -31,16 +31,28 @@ namespace SmallNeptun.Seed
 
             await context.SaveChangesAsync();
 
-            var teachers = users.Where(u => u.UserType == UserType.Teacher).ToList();
-            var students = users.Where(u => u.UserType == UserType.Student).ToList();
+            var teachers = await context.Users
+                .Where(u => u.UserType == UserType.Teacher)
+                .ToListAsync();
 
-            var courses = CreateCourses(subjects, semesters);
+            var students = await context.Users
+                .Where(u => u.UserType == UserType.Student)
+                .ToListAsync();
+
+            var savedSubjects = await context.Subjects.ToListAsync();
+            var savedSemesters = await context.Semesters.ToListAsync();
+
+            var courses = CreateCourses(savedSubjects, savedSemesters);
             context.Courses.AddRange(courses);
             await context.SaveChangesAsync();
 
-            context.CourseInstructors.AddRange(CreateCourseInstructors(courses, teachers));
-            context.Schedules.AddRange(CreateSchedules(courses));
-            context.Enrollments.AddRange(CreateEnrollments(courses, students));
+            var savedCourses = await context.Courses
+                .Include(c => c.Subject)
+                .ToListAsync();
+
+            context.CourseInstructors.AddRange(CreateCourseInstructors(savedCourses, teachers));
+            context.Schedules.AddRange(CreateSchedules(savedCourses));
+            context.Enrollments.AddRange(CreateEnrollments(savedCourses, students));
 
             await context.SaveChangesAsync();
         }
