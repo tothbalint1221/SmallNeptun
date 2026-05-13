@@ -55,6 +55,33 @@ namespace SmallNeptun.Seed
             context.Enrollments.AddRange(CreateEnrollments(savedCourses, students));
 
             await context.SaveChangesAsync();
+
+            context.Notifications.AddRange(CreateNotifications(savedCourses, students));
+            await context.SaveChangesAsync();
+        }
+
+        private static List<Notification> CreateNotifications(List<Course> courses, List<User> students)
+        {
+            var notifications = new List<Notification>();
+            var now = DateTime.UtcNow;
+
+            for (var i = 0; i < 5 && i < courses.Count && i < students.Count; i++)
+            {
+                var course = courses[i];
+                var student = students[i];
+                var lessonStart = now.AddMinutes(30 - i);
+
+                notifications.Add(new Notification
+                {
+                    UserId = student.Id,
+                    CourseId = course.Id,
+                    Reason = $"ScheduleReminder:demo:{i}",
+                    Message = $"Course {course.CourseCode} starts at {lessonStart:yyyy-MM-dd HH:mm}.",
+                    CreatedAt = now.AddMinutes(-i)
+                });
+            }
+
+            return notifications;
         }
 
         private static List<Semester> CreateSemesters()

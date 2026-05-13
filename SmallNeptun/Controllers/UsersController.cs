@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using SmallNeptun.Dtos.Exams;
 using SmallNeptun.Dtos.Users;
+using SmallNeptun.Services.Exams;
 using SmallNeptun.Services.Users;
 
 namespace SmallNeptun.Controllers
@@ -9,10 +11,12 @@ namespace SmallNeptun.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IExamService _examService;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, IExamService examService)
         {
             _userService = userService;
+            _examService = examService;
         }
 
         /// <summary>
@@ -182,6 +186,24 @@ namespace SmallNeptun.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpGet("{userId}/grades")]
+        public async Task<IActionResult> GetGrades(int userId, [FromQuery] UserGradesQueryDto query)
+        {
+            var result = await _examService.GetUserGradesAsync(userId, query);
+
+            if (result.statusCode == 1)
+            {
+                return NotFound(result.errorMessage);
+            }
+
+            if (result.statusCode == 3)
+            {
+                return BadRequest(result.errorMessage);
+            }
+
+            return Ok(result.grades);
         }
     }
 }

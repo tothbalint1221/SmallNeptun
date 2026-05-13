@@ -19,6 +19,7 @@ namespace SmallNeptun.Entities
 
         public ICollection<Grade> Grades { get; set; } = new List<Grade>();
         public ICollection<Signature> Signatures { get; set; } = new List<Signature>();
+        public ICollection<ExamRegistration> ExamRegistrations { get; set; } = new List<ExamRegistration>();
 
 
     }

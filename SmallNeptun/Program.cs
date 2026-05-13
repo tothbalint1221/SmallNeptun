@@ -5,6 +5,7 @@ using SmallNeptun.Database;
 using SmallNeptun.Repository;
 using SmallNeptun.Services.Courses;
 using SmallNeptun.Services.Enrollments;
+using SmallNeptun.Services.Exams;
 using SmallNeptun.Services.Notifications;
 using SmallNeptun.Services.Schedules;
 using SmallNeptun.Services.Subjects;
@@ -47,6 +48,7 @@ namespace SmallNeptun
             builder.Services.AddScoped<ISubjectService, SubjectService>();
             builder.Services.AddScoped<ICourseService, CourseService>();
             builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
+            builder.Services.AddScoped<IExamService, ExamService>();
             builder.Services.AddScoped<IScheduleService, ScheduleService>();
             builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddHostedService<NotificationBackgroundService>();

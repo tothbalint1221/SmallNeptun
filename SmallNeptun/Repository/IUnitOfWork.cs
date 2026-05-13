@@ -14,6 +14,8 @@ namespace SmallNeptun.Repository
         IRepository<Notification> Notifications { get; }
         IRepository<Grade> Grades { get; }
         IRepository<Signature> Signatures { get; }
+        IRepository<Exam> Exams { get; }
+        IRepository<ExamRegistration> ExamRegistrations { get; }
 
         Task<int> SaveAsync();
 

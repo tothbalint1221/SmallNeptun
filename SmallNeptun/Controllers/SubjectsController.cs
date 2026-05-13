@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using SmallNeptun.Dtos.Enrollments;
+using SmallNeptun.Dtos.Exams;
 using SmallNeptun.Dtos.Subjects;
 using SmallNeptun.Services.Enrollments;
+using SmallNeptun.Services.Exams;
 using SmallNeptun.Services.Subjects;
 
 namespace SmallNeptun.Controllers
@@ -12,11 +14,16 @@ namespace SmallNeptun.Controllers
     {
         private readonly ISubjectService _subjectService;
         private readonly IEnrollmentService _enrollmentService;
+        private readonly IExamService _examService;
 
-        public SubjectsController(ISubjectService subjectService, IEnrollmentService enrollmentService)
+        public SubjectsController(
+            ISubjectService subjectService,
+            IEnrollmentService enrollmentService,
+            IExamService examService)
         {
             _subjectService = subjectService;
             _enrollmentService = enrollmentService;
+            _examService = examService;
         }
 
         [HttpGet]
@@ -132,6 +139,19 @@ namespace SmallNeptun.Controllers
             }
 
             return Ok(result.students);
+        }
+
+        [HttpGet("{subjectId}/exams")]
+        public async Task<IActionResult> GetSubjectExams(int subjectId, [FromQuery] SubjectExamsQueryDto query)
+        {
+            var result = await _examService.GetSubjectExamsAsync(subjectId, query);
+
+            if (result.statusCode == 1)
+            {
+                return NotFound(result.errorMessage);
+            }
+
+            return Ok(result.exams);
         }
 
         private IActionResult EnrollmentResult((int statusCode, string errorMessage) result)

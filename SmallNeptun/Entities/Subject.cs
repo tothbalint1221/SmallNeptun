@@ -11,6 +11,7 @@
 
         public ICollection<Grade> Grades { get; set; } = new List<Grade>();
         public ICollection<Signature> Signatures { get; set; } = new List<Signature>();
+        public ICollection<Exam> Exams { get; set; } = new List<Exam>();
 
 
     }

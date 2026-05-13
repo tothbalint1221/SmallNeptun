@@ -17,6 +17,8 @@ namespace SmallNeptun.Database
         public DbSet<Notification> Notifications => Set<Notification>();
         public DbSet<Grade> Grades => Set<Grade>();
         public DbSet<Signature> Signatures => Set<Signature>();
+        public DbSet<Exam> Exams => Set<Exam>();
+        public DbSet<ExamRegistration> ExamRegistrations => Set<ExamRegistration>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -60,6 +62,10 @@ namespace SmallNeptun.Database
 
             modelBuilder.Entity<CourseInstructor>()
                 .HasIndex(ci => new { ci.TeacherId, ci.CourseId })
+                .IsUnique();
+
+            modelBuilder.Entity<ExamRegistration>()
+                .HasIndex(er => new { er.ExamId, er.UserId })
                 .IsUnique();
 
             // Course -> Subject
@@ -165,6 +171,34 @@ namespace SmallNeptun.Database
                 .HasOne(s => s.Semester)
                 .WithMany()
                 .HasForeignKey(s => s.SemesterId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Exam -> Subject
+            modelBuilder.Entity<Exam>()
+                .HasOne(e => e.Subject)
+                .WithMany(s => s.Exams)
+                .HasForeignKey(e => e.SubjectId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Exam -> Semester
+            modelBuilder.Entity<Exam>()
+                .HasOne(e => e.Semester)
+                .WithMany(s => s.Exams)
+                .HasForeignKey(e => e.SemesterId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // ExamRegistration -> Exam
+            modelBuilder.Entity<ExamRegistration>()
+                .HasOne(er => er.Exam)
+                .WithMany(e => e.ExamRegistrations)
+                .HasForeignKey(er => er.ExamId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // ExamRegistration -> User
+            modelBuilder.Entity<ExamRegistration>()
+                .HasOne(er => er.User)
+                .WithMany(u => u.ExamRegistrations)
+                .HasForeignKey(er => er.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
         }

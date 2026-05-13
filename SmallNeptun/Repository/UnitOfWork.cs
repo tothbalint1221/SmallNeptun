@@ -22,6 +22,8 @@ namespace SmallNeptun.Repository
         public IRepository<Notification> Notifications => new Repository<Notification>(_context);
         public IRepository<Grade> Grades => new Repository<Grade>(_context);
         public IRepository<Signature> Signatures => new Repository<Signature>(_context);
+        public IRepository<Exam> Exams => new Repository<Exam>(_context);
+        public IRepository<ExamRegistration> ExamRegistrations => new Repository<ExamRegistration>(_context);
 
         public async Task<int> SaveAsync()
         {
